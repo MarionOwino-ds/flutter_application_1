@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/colours.dart';
+import 'package:get_storage/get_storage.dart';
+
+var store = GetStorage();
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -15,7 +18,7 @@ class Dashboard extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
             const Text(
-              "Welcome Back 👋",
+              "Welcome Back  Mary👋",
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
@@ -61,10 +64,7 @@ class Dashboard extends StatelessWidget {
         children: [
           Icon(icon, size: 40, color: color),
           const SizedBox(height: 10),
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 5),
           Text(
             count,

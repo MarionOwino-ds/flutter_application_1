@@ -1,15 +1,12 @@
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-
   var isLoggedIn = false.obs;
-//dealing with rective variables
-var books=[].obs;
 
+  var status = "Not Logged in".obs;
 
-var status="Not Logged in".obs;
-  setIsLoggedIn(Value) {
-    isLoggedIn = Value;
-    status.value="Logged in";
+  void setIsLoggedIn(bool value) {
+    isLoggedIn.value = value;
+    status.value = value ? "Logged in" : "Not Logged in";
   }
 }

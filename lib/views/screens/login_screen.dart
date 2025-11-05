@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controllers/login_controller.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 LoginController loginController = Get.put(LoginController());
+var store =GetStorage();
 
+TextEditingController usernameController=TextEditingController();
+TextEditingController passwordController=TextEditingController();
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -14,6 +18,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    var storedusername=store.read("username")??'';
+    usernameController.text=storedusername;
     const maroon = Color(0xFF800000);
 
     return Scaffold(
@@ -119,7 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: GestureDetector(
                   onTap: () {
+                    store.write("username",usernameController.text);
                     loginController.setIsLoggedIn(true);
+                    Get.offNamed('/homeScreen');
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -164,11 +172,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              Obx(() => Text("status: ${loginController.status.value}")),
+              Obx(() => Text("status: ${loginController.status}")),
               const SizedBox(height: 30),
-              
-
-              
             ],
           ),
         ),
