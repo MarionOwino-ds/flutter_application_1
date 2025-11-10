@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 LoginController loginController = Get.put(LoginController());
-var store =GetStorage();
+var store = GetStorage();
 
-TextEditingController usernameController=TextEditingController();
-TextEditingController passwordController=TextEditingController();
+TextEditingController usernameController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -18,14 +19,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    var storedusername=store.read("username")??'';
-    usernameController.text=storedusername;
-    const maroon = Color(0xFF800000);
+    var storedusername = store.read("username") ?? '';
+    usernameController.text = storedusername;
+    const green = Color(0xFF2E8B57);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: maroon,
-        title: const Text("Login Screen"),
+        backgroundColor: green,
+        title: const Text("Tembea Kenya"),
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -43,12 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 120,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: maroon.withOpacity(0.1),
-                      border: Border.all(color: maroon, width: 3),
+                      color: green.withOpacity(0.1),
+                      border: Border.all(color: green, width: 3),
                     ),
                     child: ClipOval(
                       child: Image.network(
-                        "https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U",
+                        "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=400&q=80",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -66,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: usernameController,
                 decoration: InputDecoration(
                   hintText: "enter email or phone number",
                   prefixIcon: const Icon(Icons.person_outline),
@@ -79,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   focusedBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
-                    borderSide: BorderSide(color: maroon, width: 2),
+                    borderSide: BorderSide(color: green, width: 2),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -98,6 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: "enter password",
@@ -113,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   focusedBorder: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
-                    borderSide: BorderSide(color: maroon, width: 2),
+                    borderSide: BorderSide(color: green, width: 2),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -125,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    store.write("username",usernameController.text);
+                    store.write("username", usernameController.text);
                     loginController.setIsLoggedIn(true);
                     Get.offNamed('/homeScreen');
                   },
@@ -134,13 +137,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 55,
                     width: 200,
                     decoration: BoxDecoration(
-                      color: maroon.withOpacity(0.1),
+                      color: green.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: const Text(
                       "Login",
                       style: TextStyle(
-                        color: maroon,
+                        color: green,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -165,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: maroon,
+                        color: green,
                       ),
                     ),
                   ),

@@ -1,10 +1,10 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/colours.dart';
 import 'package:flutter_application_1/views/screens/dashboard.dart';
-import 'package:flutter_application_1/views/screens/books.dart';
+import 'package:flutter_application_1/views/screens/sites.dart';
 import 'package:flutter_application_1/views/screens/profiles.dart';
 import 'package:flutter_application_1/views/screens/settings.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,10 +16,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedScreenIndex = 0;
 
-  // List of screens displayed by the bottom navigation bar
   final List<Widget> screens = const [
     Dashboard(),
-    Books(),
+    Sites(),
     Profiles(),
     Settings(),
   ];
@@ -29,18 +28,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Home Screen"),
         backgroundColor: primaryColor,
+        title: const Text("Tembea Kenya"),
         foregroundColor: Colors.white,
+        centerTitle: true,
         elevation: 0,
       ),
       body: screens[selectedScreenIndex],
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
+        index: selectedScreenIndex,
+        height: 60,
         color: primaryColor,
         buttonBackgroundColor: secondaryColor,
-        height: 60,
-        index: selectedScreenIndex,
+        backgroundColor: Colors.white,
         animationDuration: const Duration(milliseconds: 300),
         items: const [
           Icon(Icons.home, size: 30, color: Colors.white),

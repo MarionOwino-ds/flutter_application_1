@@ -23,7 +23,7 @@ class Dashboard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              "Here’s an overview of your activity:",
+              "Discover amazing destinations and guides around Kenya:",
               style: TextStyle(color: Colors.black54),
             ),
             const SizedBox(height: 20),
@@ -33,10 +33,10 @@ class Dashboard extends StatelessWidget {
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
                 children: [
-                  _buildCard(Icons.book, "My Books", "12", primaryColor),
-                  _buildCard(Icons.favorite, "Favorites", "5", Colors.pink),
-                  _buildCard(Icons.person, "Followers", "200", Colors.teal),
-                  _buildCard(Icons.star, "Rating", "4.5", Colors.orange),
+                  _buildCard(Icons.landscape, "Destinations", "24", primaryColor),
+                  _buildCard(Icons.person_pin_circle, "Tour Guides", "18", secondaryColor),
+                  _buildCard(Icons.favorite, "Saved Trips", "5", tertiaryColor),
+                  _buildCard(Icons.star, "Top Rated", "4.8", Colors.orangeAccent),
                 ],
               ),
             ),

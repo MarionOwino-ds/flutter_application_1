@@ -49,12 +49,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const maroon = Color(0xFF800000);
+    const green = Color(0xFF2E8B57);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: maroon,
-        title: const Text("Registration"),
+        backgroundColor: green,
+        title: const Text("Tembea Kenya Registration"),
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -72,29 +72,30 @@ class _SignupScreenState extends State<SignupScreen> {
                     height: 120,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: maroon.withOpacity(0.1),
-                      border: Border.all(color: maroon, width: 3),
+                      color: green.withOpacity(0.1),
+                      border: Border.all(color: green, width: 3),
                     ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 60,
-                      color: maroon,
+                    child: ClipOval(
+                      child: Image.network(
+                        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=80",
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 40),
-              _buildTextField("First Name", "enter first name", Icons.person_outline, firstNameController, maroon),
+              _buildTextField("First Name", "enter first name", Icons.person_outline, firstNameController, green),
               const SizedBox(height: 30),
-              _buildTextField("Second Name", "enter second name", Icons.person_outline, secondNameController, maroon),
+              _buildTextField("Second Name", "enter second name", Icons.person_outline, secondNameController, green),
               const SizedBox(height: 30),
-              _buildTextField("Email", "enter email", Icons.email_outlined, emailController, maroon),
+              _buildTextField("Email", "enter email", Icons.email_outlined, emailController, green),
               const SizedBox(height: 30),
-              _buildTextField("Phone number", "enter phone number", Icons.phone_outlined, phoneController, maroon),
+              _buildTextField("Phone number", "enter phone number", Icons.phone_outlined, phoneController, green),
               const SizedBox(height: 30),
-              _buildTextField("Password", "enter password", Icons.lock_outline, passwordController, maroon, isPassword: true),
+              _buildTextField("Password", "enter password", Icons.lock_outline, passwordController, green, isPassword: true),
               const SizedBox(height: 30),
-              _buildTextField("Re-enter Password", "verify the password", Icons.lock_outline, rePasswordController, maroon, isPassword: true),
+              _buildTextField("Re-enter Password", "verify the password", Icons.lock_outline, rePasswordController, green, isPassword: true),
               const SizedBox(height: 40),
               Center(
                 child: GestureDetector(
@@ -104,13 +105,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     height: 55,
                     width: 200,
                     decoration: BoxDecoration(
-                      color: maroon.withOpacity(0.1),
+                      color: green.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: const Text(
                       "Sign up",
                       style: TextStyle(
-                        color: maroon,
+                        color: green,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -135,7 +136,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: maroon,
+                        color: green,
                       ),
                     ),
                   ),
@@ -149,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildTextField(String label, String hint, IconData icon, TextEditingController controller, Color maroon,
+  Widget _buildTextField(String label, String hint, IconData icon, TextEditingController controller, Color green,
       {bool isPassword = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,8 +181,8 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(
-                color: maroon,
+              borderSide: const BorderSide(
+                color:Colors. green,
                 width: 2,
               ),
             ),
