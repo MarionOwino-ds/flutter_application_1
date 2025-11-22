@@ -1,66 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:get/get.dart';
 
-class DogFoodPage extends StatelessWidget {
+class DogFoodPage extends StatefulWidget {
   const DogFoodPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final dogFoods = [
-      {
-        "name": "Royal Canin Puppy",
-        "price": 2500,
-        "image": "https://cdn.pixabay.com/photo/2016/03/27/07/08/dog-1284302_1280.jpg"
-      },
-      {
-        "name": "Pedigree Adult",
-        "price": 1800,
-        "image": "https://cdn.pixabay.com/photo/2017/09/25/13/12/bowl-2786491_1280.jpg"
-      },
-      {
-        "name": "Whiskas Dog Treats",
-        "price": 900,
-        "image": "https://cdn.pixabay.com/photo/2016/11/29/03/04/dog-1861831_1280.jpg"
-      },
-      {
-        "name": "Orijen Adult Dog Food",
-        "price": 3500,
-        "image": "https://cdn.pixabay.com/photo/2014/04/10/11/29/dog-food-320077_1280.jpg"
-      },
-    ];
+  State<DogFoodPage> createState() => _DogFoodPageState();
+}
 
+class _DogFoodPageState extends State<DogFoodPage> {
+  List<dynamic> dogFoods = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDogFoods();
+  }
+
+  fetchDogFoods() async {
+    var url = Uri.parse('http://localhost/pet_store_app/dog_food.php');
+    var response = await http.get(url);
+    setState(() {
+      dogFoods = json.decode(response.body);
+    });
+  }
+
+  deleteDogFood(String id) async {
+    var url = Uri.parse('http://localhost/pet_store_app/delete_dog_food.php');
+    await http.post(url, body: {'id': id});
+    fetchDogFoods();
+  }
+
+  addOrUpdateDogFood({String? id, String? name, String? price, String? image}) async {
+    TextEditingController nameController = TextEditingController(text: name);
+    TextEditingController priceController = TextEditingController(text: price);
+    TextEditingController imageController = TextEditingController(text: image);
+
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(id == null ? "Add Dog Food" : "Edit Dog Food"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(controller: nameController, decoration: const InputDecoration(hintText: "Name")),
+            TextField(controller: priceController, decoration: const InputDecoration(hintText: "Price")),
+            TextField(controller: imageController, decoration: const InputDecoration(hintText: "Image URL")),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () async {
+                var url = Uri.parse(id == null
+                    ? 'http://localhost/pet_store_app/add_dog_food.php'
+                    : 'http://localhost/pet_store_app/update_dog_food.php');
+                await http.post(url, body: {
+                  if (id != null) 'id': id,
+                  'name': nameController.text,
+                  'price': priceController.text,
+                  'image': imageController.text
+                });
+                Navigator.pop(context);
+                fetchDogFoods();
+              },
+              child: const Text("Save")),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Dog Food Products"),
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
+        actions: [IconButton(onPressed: () => addOrUpdateDogFood(), icon: const Icon(Icons.add))],
       ),
       body: ListView.builder(
         itemCount: dogFoods.length,
         itemBuilder: (context, index) {
-          final food = dogFoods[index];
-          final name = food["name"] as String;
-          final price = food["price"] as int;
-          final image = food["image"] as String;
-
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: ListTile(
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  image,
-                  width: 60,
-                  height: 60,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.broken_image, size: 60);
-                  },
-                ),
-              ),
-              title: Text(name),
-              subtitle: Text("KES $price"),
-              trailing: const Icon(Icons.add_shopping_cart),
-            ),
+          var food = dogFoods[index];
+          return ListTile(
+            leading: Image.network(food['image'], width: 60, height: 60, fit: BoxFit.cover),
+            title: Text(food['name']),
+            subtitle: Text("KES ${food['price']}"),
+            trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+              IconButton(onPressed: () => addOrUpdateDogFood(id: food['id'], name: food['name'], price: food['price'].toString(), image: food['image']), icon: const Icon(Icons.edit)),
+              IconButton(onPressed: () => deleteDogFood(food['id'].toString()), icon: const Icon(Icons.delete)),
+            ]),
           );
         },
       ),

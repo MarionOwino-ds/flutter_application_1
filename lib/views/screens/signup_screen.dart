@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_1/configs/colours.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -17,35 +19,51 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController rePasswordController = TextEditingController();
 
-  void _validateAndSignup() {
+  void _validateAndSignup() async {
     if (firstNameController.text.isEmpty ||
         secondNameController.text.isEmpty ||
         emailController.text.isEmpty ||
         phoneController.text.isEmpty ||
         passwordController.text.isEmpty ||
         rePasswordController.text.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "All fields are required",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+      Get.snackbar("Error", "All fields are required",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white);
       return;
     }
 
     if (passwordController.text != rePasswordController.text) {
-      Get.snackbar(
-        "Error",
-        "Passwords do not match",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+      Get.snackbar("Error", "Passwords do not match",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white);
       return;
     }
 
-    Get.offAllNamed('/homeScreen');
+    var url = Uri.parse('http://127.0.0.1/pet_store_app/signup.php');
+    var response = await http.post(url, body: {
+      'fname': firstNameController.text,
+      'lname': secondNameController.text,
+      'email': emailController.text,
+      'phone': phoneController.text,
+      'password': passwordController.text,
+    });
+
+    var data = jsonDecode(response.body);
+
+    if (data['status'] == 'success') {
+      Get.snackbar("Success", "Account created successfully!",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
+      Get.offAllNamed('/homeScreen');
+    } else {
+      Get.snackbar("Error", data['message'] ?? "Signup failed",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white);
+    }
   }
 
   @override
@@ -84,17 +102,25 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
               const SizedBox(height: 40),
-              _buildTextField("First Name", "enter first name", Icons.person_outline, firstNameController),
+              _buildTextField("First Name", "enter first name",
+                  Icons.person_outline, firstNameController),
               const SizedBox(height: 30),
-              _buildTextField("Second Name", "enter second name", Icons.person_outline, secondNameController),
+              _buildTextField("Second Name", "enter second name",
+                  Icons.person_outline, secondNameController),
               const SizedBox(height: 30),
-              _buildTextField("Email", "enter email", Icons.email_outlined, emailController),
+              _buildTextField(
+                  "Email", "enter email", Icons.email_outlined, emailController),
               const SizedBox(height: 30),
-              _buildTextField("Phone number", "enter phone number", Icons.phone_outlined, phoneController),
+              _buildTextField("Phone number", "enter phone number",
+                  Icons.phone_outlined, phoneController),
               const SizedBox(height: 30),
-              _buildTextField("Password", "enter password", Icons.lock_outline, passwordController, isPassword: true),
+              _buildTextField("Password", "enter password",
+                  Icons.lock_outline, passwordController,
+                  isPassword: true),
               const SizedBox(height: 30),
-              _buildTextField("Re-enter Password", "verify password", Icons.lock_outline, rePasswordController, isPassword: true),
+              _buildTextField("Re-enter Password", "verify password",
+                  Icons.lock_outline, rePasswordController,
+                  isPassword: true),
               const SizedBox(height: 40),
               Center(
                 child: GestureDetector(
@@ -122,22 +148,17 @@ class _SignupScreenState extends State<SignupScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Already have an account? ",
-                    style: TextStyle(fontSize: 14, color: Colors.black87),
-                  ),
+                  const Text("Already have an account? ",
+                      style: TextStyle(fontSize: 14, color: Colors.black87)),
                   GestureDetector(
                     onTap: () {
                       Get.toNamed('/login');
                     },
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor,
-                      ),
-                    ),
+                    child: Text("Login",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor)),
                   ),
                 ],
               ),
@@ -149,20 +170,15 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildTextField(
-      String label, String hint, IconData icon, TextEditingController controller,
+  Widget _buildTextField(String label, String hint, IconData icon,
+      TextEditingController controller,
       {bool isPassword = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
+        Text(label,
+            style: const TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black87)),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
@@ -181,15 +197,9 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(
-                color: primaryColor,
-                width: 2,
-              ),
+              borderSide: BorderSide(color: primaryColor, width: 2),
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           ),
         ),
       ],

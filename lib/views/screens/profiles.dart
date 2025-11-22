@@ -2,15 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/colours.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class Profiles extends StatelessWidget {
+class Profiles extends StatefulWidget {
   const Profiles({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var store = GetStorage();
-    var username = store.read("username") ?? "Guest User";
+  State<Profiles> createState() => _ProfilesState();
+}
 
+class _ProfilesState extends State<Profiles> {
+  final store = GetStorage();
+  Map<String, dynamic> userData = {};
+  bool isLoading = true;
+
+  final TextEditingController fnameController = TextEditingController();
+  final TextEditingController lnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfile();
+  }
+
+  Future<void> fetchProfile() async {
+    String username = store.read("username") ?? '';
+    var url = Uri.parse("http://localhost/pet_store_app/get_profile.php");
+    var response = await http.post(url, body: {"phone": username});
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data['status'] == 'success') {
+        userData = data['data'];
+        fnameController.text = userData['fname'];
+        lnameController.text = userData['lname'];
+        emailController.text = userData['email'];
+        phoneController.text = userData['phone'];
+      }
+    }
+    setState(() => isLoading = false);
+  }
+
+  Future<void> updateProfile() async {
+    var url = Uri.parse("http://localhost/pet_store_app/update_profile.php");
+    var response = await http.post(
+      url,
+      body: {
+        "id": userData['id'].toString(),
+        "fname": fnameController.text,
+        "lname": lnameController.text,
+        "email": emailController.text,
+        "phone": phoneController.text,
+      },
+    );
+    var data = json.decode(response.body);
+    Get.snackbar(
+      data['status'] == 'success' ? "Success" : "Error",
+      data['message'] ?? "",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: data['status'] == 'success' ? Colors.green : Colors.red,
+      colorText: Colors.white,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -19,90 +77,64 @@ class Profiles extends StatelessWidget {
         foregroundColor: Colors.white,
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(
-                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              username,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const Text("user@example.com", style: TextStyle(color: Colors.grey)),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildStat("Orders", "5"),
-                _buildStat("Cart Items", "2"),
-                _buildStat("Favorites", "10"),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
               child: Column(
-                children: const [
-                  ListTile(
-                    leading: Icon(Icons.phone, color: Colors.blue),
-                    title: Text("Phone"),
-                    subtitle: Text("+254 712 345 678"),
+                children: [
+                  const SizedBox(height: 20),
+                  const CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(
+                      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+                    ),
                   ),
-                  Divider(height: 1),
-                  ListTile(
-                    leading: Icon(Icons.location_on, color: Colors.red),
-                    title: Text("Location"),
-                    subtitle: Text("Nairobi, Kenya"),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: fnameController,
+                    decoration: const InputDecoration(labelText: "First Name"),
+                  ),
+                  TextField(
+                    controller: lnameController,
+                    decoration: const InputDecoration(labelText: "Last Name"),
+                  ),
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: "Email"),
+                  ),
+                  TextField(
+                    controller: phoneController,
+                    decoration: const InputDecoration(labelText: "Phone"),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: updateProfile,
+                    child: const Text("Update Profile"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  OutlinedButton(
+                    onPressed: () {
+                      store.erase();
+                      Get.offAllNamed('/login');
+                    },
+                    child: const Text(
+                      "Logout",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      side: const BorderSide(color: Colors.red),
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.edit),
-              label: const Text("Edit Profile"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                foregroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
-            const SizedBox(height: 10),
-            OutlinedButton.icon(
-              onPressed: () {
-                store.erase();
-                Get.offAllNamed('/login');
-              },
-              icon: const Icon(Icons.logout, color: Colors.red),
-              label: const Text("Logout", style: TextStyle(color: Colors.red)),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                side: const BorderSide(color: Colors.red),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStat(String label, String value) {
-    return Column(
-      children: [
-        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(color: Colors.grey)),
-      ],
     );
   }
 }

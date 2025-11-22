@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/colours.dart';
-import 'package:flutter_application_1/controllers/login_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-LoginController loginController = Get.put(LoginController());
 var store = GetStorage();
 
 TextEditingController usernameController = TextEditingController();
@@ -18,15 +18,63 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  var isLoading = false.obs;
+
+  Future<void> _login() async {
+    if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "All fields are required",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+    var url = Uri.parse("http://localhost/pet_store_app/login.php");
+    var response = await http.post(url, body: {
+      "phone": usernameController.text,
+      "password": passwordController.text,
+    });
+
+    isLoading.value = false;
+
+    if (response.statusCode == 200) {
+      var data = json.decode(response.body);
+      if (data['status'] == "success") {
+        store.write("username", usernameController.text);
+        Get.offAllNamed('/homeScreen');
+      } else {
+        Get.snackbar(
+          "Login Failed",
+          data['message'] ?? "Invalid credentials",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
+      }
+    } else {
+      Get.snackbar(
+        "Error",
+        "Server error: ${response.statusCode}",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var storedusername = store.read("username") ?? '';
     usernameController.text = storedusername;
-    const green = Color(0xFF6D4C41);  
+    const green = Color(0xFF6D4C41);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:primaryColor,
+        backgroundColor: primaryColor,
         title: const Text("Paws & Plates "),
         foregroundColor: Colors.white,
       ),
@@ -80,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(25),
                     borderSide: const BorderSide(color: Colors.grey),
                   ),
-                  focusedBorder: OutlineInputBorder(        // FIXED — removed const
+                  focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25),
                     borderSide: const BorderSide(color: green, width: 2),
                   ),
@@ -115,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(25),
                     borderSide: const BorderSide(color: Colors.grey),
                   ),
-                  focusedBorder: OutlineInputBorder(         // FIXED — removed const
+                  focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25),
                     borderSide: const BorderSide(color: green, width: 2),
                   ),
@@ -127,30 +175,30 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 40),
               Center(
-                child: GestureDetector(
-                  onTap: () {
-                    store.write("username", usernameController.text);
-                    loginController.setIsLoggedIn(true);
-                    Get.offNamed('/homeScreen');
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 55,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      color: green.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(
-                        color: green,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                child: Obx(() => GestureDetector(
+                      onTap: isLoading.value ? null : _login,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 55,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: green.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: isLoading.value
+                            ? const CircularProgressIndicator(
+                                color: green,
+                              )
+                            : const Text(
+                                "Login",
+                                style: TextStyle(
+                                  color: green,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                       ),
-                    ),
-                  ),
-                ),
+                    )),
               ),
               const SizedBox(height: 16),
               Row(
@@ -175,8 +223,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Obx(() => Text("status: ${loginController.status}")),
               const SizedBox(height: 30),
             ],
           ),
