@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/configs/colours.dart';
 import 'package:flutter_application_1/controllers/login_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -21,12 +22,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     var storedusername = store.read("username") ?? '';
     usernameController.text = storedusername;
-    const green = Color(0xFF2E8B57);
+    const green = Color(0xFF6D4C41);  
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: green,
-        title: const Text("Tembea Kenya"),
+        backgroundColor:primaryColor,
+        title: const Text("Paws & Plates "),
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: ClipOval(
                       child: Image.network(
-                        "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=400&q=80",
+                        "https://cdn-icons-png.flaticon.com/512/620/620851.png",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -79,9 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(25),
                     borderSide: const BorderSide(color: Colors.grey),
                   ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
-                    borderSide: BorderSide(color: green, width: 2),
+                  focusedBorder: OutlineInputBorder(        // FIXED — removed const
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(color: green, width: 2),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,
@@ -114,9 +115,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(25),
                     borderSide: const BorderSide(color: Colors.grey),
                   ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
-                    borderSide: BorderSide(color: green, width: 2),
+                  focusedBorder: OutlineInputBorder(         // FIXED — removed const
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: const BorderSide(color: green, width: 2),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 20,

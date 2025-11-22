@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/colours.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -14,6 +16,8 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    var store = GetStorage();
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -48,7 +52,10 @@ class _SettingsState extends State<Settings> {
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.redAccent),
             title: const Text("Logout"),
-            onTap: () {},
+            onTap: () {
+              store.erase();
+              Get.offAllNamed('/login');
+            },
           ),
         ],
       ),

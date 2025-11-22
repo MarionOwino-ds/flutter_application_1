@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_application_1/configs/routes.dart';
+import 'package:flutter_application_1/configs/colours.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,12 +14,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Simple App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      title: 'Paws & Plates',
+      theme: ThemeData(
+        primaryColor: primaryColor,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: primaryColor,
+            foregroundColor: Colors.white,
+          ),
+        ),
+      ),
       initialRoute: AppRoutes.login,
       getPages: AppRoutes.routes,
     );
   }
 }
-
 

@@ -9,21 +9,23 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var username = store.read("username") ?? "Guest";
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            const Text(
-              "Welcome Back  Mary👋",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            Text(
+              "Welcome Back, $username 👋",
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             const Text(
-              "Discover amazing destinations and guides around Kenya:",
+              "Check out your dog food orders and offers:",
               style: TextStyle(color: Colors.black54),
             ),
             const SizedBox(height: 20),
@@ -33,10 +35,10 @@ class Dashboard extends StatelessWidget {
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
                 children: [
-                  _buildCard(Icons.landscape, "Destinations", "24", primaryColor),
-                  _buildCard(Icons.person_pin_circle, "Tour Guides", "18", secondaryColor),
-                  _buildCard(Icons.favorite, "Saved Trips", "5", tertiaryColor),
-                  _buildCard(Icons.star, "Top Rated", "4.8", Colors.orangeAccent),
+                  _buildCard(Icons.shopping_bag, "Orders", "5", primaryColor),
+                  _buildCard(Icons.shopping_cart, "Cart Items", "2", secondaryColor),
+                  _buildCard(Icons.favorite, "Favorites", "10", tertiaryColor),
+                  _buildCard(Icons.local_offer, "Promotions", "3", Colors.orangeAccent),
                 ],
               ),
             ),

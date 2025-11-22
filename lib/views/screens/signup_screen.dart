@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_application_1/configs/colours.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -49,12 +50,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const green = Color(0xFF2E8B57);
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: green,
-        title: const Text("Tembea Kenya Registration"),
+        backgroundColor: primaryColor,
+        title: const Text("Paws & Plates Registration"),
         foregroundColor: Colors.white,
       ),
       body: Padding(
@@ -72,12 +71,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     height: 120,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: green.withOpacity(0.1),
-                      border: Border.all(color: green, width: 3),
+                      color: primaryColor.withOpacity(0.1),
+                      border: Border.all(color: primaryColor, width: 3),
                     ),
                     child: ClipOval(
                       child: Image.network(
-                        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=400&q=80",
+                        "https://cdn-icons-png.flaticon.com/512/620/620851.png",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -85,17 +84,17 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
               const SizedBox(height: 40),
-              _buildTextField("First Name", "enter first name", Icons.person_outline, firstNameController, green),
+              _buildTextField("First Name", "enter first name", Icons.person_outline, firstNameController),
               const SizedBox(height: 30),
-              _buildTextField("Second Name", "enter second name", Icons.person_outline, secondNameController, green),
+              _buildTextField("Second Name", "enter second name", Icons.person_outline, secondNameController),
               const SizedBox(height: 30),
-              _buildTextField("Email", "enter email", Icons.email_outlined, emailController, green),
+              _buildTextField("Email", "enter email", Icons.email_outlined, emailController),
               const SizedBox(height: 30),
-              _buildTextField("Phone number", "enter phone number", Icons.phone_outlined, phoneController, green),
+              _buildTextField("Phone number", "enter phone number", Icons.phone_outlined, phoneController),
               const SizedBox(height: 30),
-              _buildTextField("Password", "enter password", Icons.lock_outline, passwordController, green, isPassword: true),
+              _buildTextField("Password", "enter password", Icons.lock_outline, passwordController, isPassword: true),
               const SizedBox(height: 30),
-              _buildTextField("Re-enter Password", "verify the password", Icons.lock_outline, rePasswordController, green, isPassword: true),
+              _buildTextField("Re-enter Password", "verify password", Icons.lock_outline, rePasswordController, isPassword: true),
               const SizedBox(height: 40),
               Center(
                 child: GestureDetector(
@@ -105,13 +104,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     height: 55,
                     width: 200,
                     decoration: BoxDecoration(
-                      color: green.withOpacity(0.1),
+                      color: primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Sign up",
                       style: TextStyle(
-                        color: green,
+                        color: primaryColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -131,12 +130,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     onTap: () {
                       Get.toNamed('/login');
                     },
-                    child: const Text(
+                    child: Text(
                       "Login",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: green,
+                        color: primaryColor,
                       ),
                     ),
                   ),
@@ -150,7 +149,8 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _buildTextField(String label, String hint, IconData icon, TextEditingController controller, Color green,
+  Widget _buildTextField(
+      String label, String hint, IconData icon, TextEditingController controller,
       {bool isPassword = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,8 +181,8 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide: const BorderSide(
-                color:Colors. green,
+              borderSide: BorderSide(
+                color: primaryColor,
                 width: 2,
               ),
             ),
